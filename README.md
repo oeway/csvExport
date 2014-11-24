@@ -15,7 +15,7 @@ Usage for visualization in ViSP:
 Usage for Matlab:
 * choose your file
 * fill the column number you want to export to "Selected Columns"
-* put "," in "Export Delimiter";
+* put "," in "Output Delimiter";
     click Export, specify the extension as ".csv"
     and use csvread() to load data.
     data = csvread(FILE_PATH);
