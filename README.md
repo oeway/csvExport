@@ -24,3 +24,6 @@ Usage for Matlab:
 * Input Delimiter: the delimiter used to separate columns, for csv and xls file, this parameter will change automatically.
 * Selected Columns: the column number and order you want to have in the target file
 * Output Delimiter: the delimiter of exported file used to separate columns, eg. "\t" for xls file and "," for csv file.
+
+
+###
