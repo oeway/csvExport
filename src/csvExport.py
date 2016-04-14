@@ -10,9 +10,6 @@ import tkMessageBox
 import os,sys
 import threading
 
-import_delimiter = ','
-export_delimiter = '\t'
-
 FileName = False
 def openFile():
     options = {}
@@ -46,8 +43,9 @@ def importDelimiterChanged(*args):
         for i,h in enumerate(header):
             HeaderListbox.insert(Tkinter.END, str(i+1)+": "+h.strip('"'))
         f.close()
+        headerSelectChanged()
         #except:
-        pass
+        #pass
 
 def headerSelectChanged(*args):
     try:
@@ -57,6 +55,23 @@ def headerSelectChanged(*args):
             si = si+1
             format +=  (", "+str(si))
             exportFormatVar.set(format.strip(","))
+            
+        #update header    
+        ef = exportFormatVar.get().split(',')#['x','y','z','intensity','frame']
+        ef = [int(e.strip())-1 for e in ef ] # remove empty
+        eformat = [e for e in ef if e>=0 and e<HeaderListbox.size()]
+        global FileName
+        f = open(FileName,'rb')
+        reader = csv.reader(f, delimiter=importDelimiterVar.get().decode("string_escape"), quotechar='|')
+        reader = csv.reader(f, delimiter=importDelimiterVar.get().decode("string_escape"), quotechar='|')
+        header = reader.next()
+        f.close()
+        outputDelimiter = exportDelimiterVar.get()
+        tmp = ""
+        for i,h in enumerate(header):
+            if i in eformat:
+                tmp += (h.strip('"') + outputDelimiter)
+        headerVar.set(tmp.rstrip(outputDelimiter))
     except:
         pass
 
@@ -104,7 +119,6 @@ class exportThread (threading.Thread):
                 reader = csv.reader(csvfile, delimiter=importDelimiterVar.get().decode("string_escape"), quotechar='|')
                 header = reader.next()
                 
-                
                 selection = []
                 for ix in self.export_format:
                     if ix>=0 and ix<len(header):
@@ -120,10 +134,11 @@ class exportThread (threading.Thread):
                 #newRow = [header[i] for i in selection]
                 print({i:header[i] for i in range(len(header))})
                 j=0
+                exportDelimiter = exportDelimiterVar.get().decode("string_escape")
                 f = open(self.toFile, 'wb')
-                writer = csv.writer(f, delimiter=exportDelimiterVar.get().decode("string_escape"))
+                writer = csv.writer(f, delimiter=exportDelimiter)
                 if includeHeaderVar.get():
-                    newRow = [header[i].strip('"') for i in selection]
+                    newRow = headerVar.get().decode("string_escape").split(exportDelimiter) # [header[i].strip('"') for i in selection]
                     writer.writerow(newRow)
                 for row in reader:
                     #print row
@@ -195,9 +210,19 @@ if __name__ == '__main__':
     #e.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
     e.grid(row=4,column=1)
     
+    L4 = ttk.Label(ft, text="Header:")
+    #L3.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
+    L4.grid(row=5,column=0,sticky=Tkinter.W)
+    
+    headerVar = Tkinter.StringVar()
+    headerVar.set("")
+    e = ttk.Entry(ft, textvariable=headerVar)
+    #e.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
+    e.grid(row=5,column=1)
+    
     includeHeaderVar = Tkinter.IntVar()
     cb = ttk.Checkbutton(ft, text="Include Header", variable=includeHeaderVar)
-    cb.grid(row=5,column=0,columnspan=2,sticky=Tkinter.W+Tkinter.E)
+    cb.grid(row=6,column=0,columnspan=2,sticky=Tkinter.W+Tkinter.E)
     
     #replaceInfVar = Tkinter.IntVar()
     #cb2 = ttk.Checkbutton(ft, text="Include Header", variable=replaceInfVar)
@@ -205,10 +230,10 @@ if __name__ == '__main__':
 
     exportBtn = ttk.Button(ft,text ="Export", command = exportFile)
     #exportBtn.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
-    exportBtn.grid(row=6,column=0,columnspan=2,sticky=Tkinter.W+Tkinter.E)
+    exportBtn.grid(row=7,column=0,columnspan=2,sticky=Tkinter.W+Tkinter.E)
     
     pb_hd = ttk.Progressbar(ft, orient='horizontal', mode='determinate')
     #pb_hd.pack(expand=True, fill=Tkinter.BOTH, side=Tkinter.TOP)
-    pb_hd.grid(row=7,column=0,columnspan=2, sticky=Tkinter.W+Tkinter.E)
+    pb_hd.grid(row=8,column=0,columnspan=2, sticky=Tkinter.W+Tkinter.E)
     
     root.mainloop()

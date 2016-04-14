@@ -20,10 +20,17 @@ Usage for Matlab:
     and use csvread() to load data.
     data = csvread(FILE_PATH);
 
+Example settings for convert from Vutar particle csv file format to thunderSTROM format:
+* Input delimiter:  ,
+* Selected Column:   4, 16, 17, 18, 7
+* Output delimiter:  ,
+* Header:    frame,x [nm],y [nm],z [nm],intensity [photon]
+
+
 ### Parameters
 * Input Delimiter: the delimiter used to separate columns, for csv and xls file, this parameter will change automatically.
 * Selected Columns: the column number and order you want to have in the target file
 * Output Delimiter: the delimiter of exported file used to separate columns, eg. "\t" for xls file and "," for csv file.
-
+* Header: the output header, you can edit if you want to change for the output.
 
 ###
