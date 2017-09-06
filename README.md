@@ -24,7 +24,7 @@ Example settings for convert from Vutar particle csv file format to thunderSTROM
 * Input delimiter:  ,
 * Selected Column:   4, 16, 17, 18, 7
 * Output delimiter:  ,
-* Header:    "frame","x [nm]","y [nm]","z [nm]","intensity [photon]"
+* Header:    frame,x [nm],y [nm],z [nm],intensity [photon]
 
 
 ### Parameters
